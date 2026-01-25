@@ -1,64 +1,76 @@
-#bible-app {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 24px;
-  border-radius: 14px;
-  font-family: Georgia, serif;
+<style>
+body {
+  font-family: system-ui, sans-serif;
+  background: #0b2c34;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
 }
 
-.dark {
-  background: #0f2f3a;
-  color: white;
-}
-
-.light {
-  background: #ffffff;
-  color: #111;
-}
-
-header {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-select, button, input {
-  padding: 6px;
-  border-radius: 6px;
-  border: none;
-}
-
-#reference {
-  font-size: 0.9rem;
-  opacity: 0.7;
-}
-
-#verse {
-  font-size: 1.4rem;
-  line-height: 1.6;
-  margin: 16px 0;
-}
-
-.fade {
-  animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.controls {
+.app {
+  max-width: 600px;
+  margin: auto;
   text-align: center;
 }
 
-#searchResults {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
+#verseBox {
+  background: #ffffff;
+  color: #000;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 
-#searchResults li {
-  cursor: pointer;
-  padding: 6px;
+#reference {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
 }
+
+.progress-container {
+  width: 100%;
+  height: 6px;
+  background: #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#progress {
+  height: 100%;
+  width: 0%;
+  background: #1abc9c;
+  transition: width 0.3s;
+}
+
+.controls {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+button {
+  padding: 10px 14px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+#grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 10px;
+}
+
+#grid button {
+  padding: 10px;
+  background: #1abc9c;
+  color: #000;
+  border-radius: 8px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
