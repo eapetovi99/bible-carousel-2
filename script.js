@@ -1,5 +1,4 @@
-<script>
-const DATA_URL = "https://eapetovi99.github.io/bible-carousel-2/";
+const DATA_URL = "https://eapetovi99.github.io/bible-carousel-2/matthieu";
 
 let verses = [];
 let index = 0;
