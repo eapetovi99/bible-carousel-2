@@ -1,139 +1,91 @@
+<script>
+const DATA_URL = "https://raw.githubusercontent.com/eapetovi99/bible-carousel-2/main/matthieu.json";
+
 let verses = [];
-let filteredVerses = [];
-let currentIndex = 0;
-let interval = null;
+let index = 0;
+let playing = true;
+let interval;
 
-fetch("matthieu.json")
+const verseText = document.getElementById("verseText");
+const reference = document.getElementById("reference");
+const progress = document.getElementById("progress");
+const grid = document.getElementById("grid");
+
+fetch(DATA_URL)
   .then(res => res.json())
-  .then(data => init(data));
+  .then(data => {
+    const chapters = data.chapters;
 
-function init(data) {
-  buildVerses(data);
-  buildChapterSelector(data);
-  render();
-  verseOfTheDay();
+    for (const chapter in chapters) {
+      for (const verse in chapters[chapter]) {
+        verses.push({
+          ref: `Matthieu ${chapter}:${verse}`,
+          text: chapters[chapter][verse]
+        });
+      }
+    }
+
+    console.log("Verses loaded:", verses.length);
+
+    showVerse();
+    buildGrid(chapters);
+    autoPlay();
+  })
+  .catch(err => console.error("Fetch error:", err));
+
+function showVerse() {
+  const v = verses[index];
+  verseText.textContent = v.text;
+  reference.textContent = v.ref;
+  progress.style.width = ((index + 1) / verses.length) * 100 + "%";
 }
 
-function buildVerses(data) {
-  Object.entries(data.chapters).forEach(([c, chapter]) => {
-    Object.entries(chapter).forEach(([v, text]) => {
-      verses.push({
-        chapter: c,
-        verse: v,
-        reference: `Matthieu ${c}:${v}`,
-        text
-      });
-    });
-  });
-  filteredVerses = verses;
+function nextVerse() {
+  index = (index + 1) % verses.length;
+  showVerse();
 }
 
-function render() {
-  const v = filteredVerses[currentIndex];
-  const verseDiv = document.getElementById("verse");
-  verseDiv.classList.remove("fade");
-  void verseDiv.offsetWidth;
-  verseDiv.classList.add("fade");
-
-  document.getElementById("reference").textContent = v.reference;
-  verseDiv.textContent = v.text;
+function prevVerse() {
+  index = (index - 1 + verses.length) % verses.length;
+  showVerse();
 }
 
-function buildChapterSelector(data) {
-  const cs = document.getElementById("chapterSelect");
-  Object.keys(data.chapters).forEach(c => {
-    const opt = new Option(`Chapitre ${c}`, c);
-    cs.add(opt);
-  });
-
-  cs.onchange = () => {
-    filteredVerses = verses.filter(v => v.chapter === cs.value);
-    currentIndex = 0;
-    buildVerseSelector();
-    render();
-  };
-
-  buildVerseSelector();
+function autoPlay() {
+  interval = setInterval(() => {
+    if (playing) nextVerse();
+  }, 5000);
 }
 
-function buildVerseSelector() {
-  const vs = document.getElementById("verseSelect");
-  vs.innerHTML = "";
-  filteredVerses.forEach((v, i) => {
-    vs.add(new Option(v.verse, i));
-  });
+// Buttons
+document.getElementById("next").onclick = nextVerse;
+document.getElementById("prev").onclick = prevVerse;
 
-  vs.onchange = () => {
-    currentIndex = vs.value;
-    render();
-  };
-}
-
-// Controls
-document.getElementById("next").onclick = () => {
-  currentIndex = (currentIndex + 1) % filteredVerses.length;
-  render();
+document.getElementById("pause").onclick = () => {
+  playing = !playing;
+  document.getElementById("pause").textContent = playing ? "⏸" : "▶";
 };
 
-document.getElementById("prev").onclick = () => {
-  currentIndex =
-    (currentIndex - 1 + filteredVerses.length) %
-    filteredVerses.length;
-  render();
+document.getElementById("gridBtn").onclick = () => {
+  grid.classList.toggle("hidden");
 };
 
-document.getElementById("auto").onclick = () => {
-  if (interval) {
-    clearInterval(interval);
-    interval = null;
-  } else {
-    interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % filteredVerses.length;
-      render();
-    }, 5000);
+// Build chapter grid
+function buildGrid(chapters) {
+  grid.innerHTML = "";
+
+  for (const chapter in chapters) {
+    const btn = document.createElement("button");
+    btn.textContent = `Ch ${chapter}`;
+
+    btn.onclick = () => {
+      index = verses.findIndex(v =>
+        v.ref.startsWith(`Matthieu ${chapter}:`)
+      );
+      showVerse();
+      grid.classList.add("hidden");
+    };
+
+    grid.appendChild(btn);
   }
-};
-
-// Random Verse
-document.getElementById("randomVerse").onclick = () => {
-  currentIndex = Math.floor(Math.random() * verses.length);
-  filteredVerses = verses;
-  render();
-};
-
-// Verse of the day
-function verseOfTheDay() {
-  const day = new Date().getDate();
-  currentIndex = day % verses.length;
 }
-
-// Search
-document.getElementById("search").oninput = e => {
-  const q = e.target.value.toLowerCase();
-  const results = document.getElementById("searchResults");
-  results.innerHTML = "";
-
-  if (!q) return;
-
-  verses
-    .filter(v => v.text.toLowerCase().includes(q))
-    .slice(0, 20)
-    .forEach(v => {
-      const li = document.createElement("li");
-      li.textContent = `${v.reference} — ${v.text.slice(0, 50)}…`;
-      li.onclick = () => {
-        filteredVerses = verses;
-        currentIndex = verses.indexOf(v);
-        render();
-        results.innerHTML = "";
-      };
-      results.appendChild(li);
-    });
-};
-
-// Theme toggle
-document.getElementById("toggleTheme").onclick = () => {
-  const app = document.getElementById("bible-app");
-  app.classList.toggle("dark");
-  app.classList.toggle("light");
-};
+</script>
