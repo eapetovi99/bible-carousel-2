@@ -1,4 +1,4 @@
-const DATA_URL = "https://eapetovi99.github.io/bible-carousel-2/matthieu";
+const DATA_URL = "https://eapetovi99.github.io/bible-carousel-2/matthieu.json";
 
 let verses = [];
 let index = 0;
@@ -87,4 +87,4 @@ function buildGrid(chapters) {
     grid.appendChild(btn);
   }
 }
-</script>
+
