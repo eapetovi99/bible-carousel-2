@@ -1,27 +1,37 @@
-<div id="bible-app" class="dark">
-  <header>
-    <select id="chapterSelect"></select>
-    <select id="verseSelect"></select>
-    <button id="randomVerse">🎯</button>
-    <button id="toggleTheme">🌙</button>
-  </header>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Évangile de Matthieu</title>
+</head>
+<body>
 
-  <div id="carousel">
-    <div id="reference"></div>
-    <div id="verse" class="fade"></div>
+<div class="app">
+
+  <h1>📖 Évangile de Matthieu</h1>
+
+  <!-- Verse Display -->
+  <div id="verseBox">
+    <span id="reference"></span>
+    <p id="verseText"></p>
   </div>
 
+  <!-- Progress bar -->
+  <div class="progress-container">
+    <div id="progress"></div>
+  </div>
+
+  <!-- Controls -->
   <div class="controls">
-    <button id="prev">◀</button>
-    <button id="auto">⏯</button>
-    <button id="next">▶</button>
+    <button id="prev">⏮</button>
+    <button id="pause">⏸</button>
+    <button id="next">⏭</button>
+    <button id="gridBtn">🔲</button>
   </div>
 
-  <input
-    id="search"
-    type="text"
-    placeholder="Rechercher un mot…"
-  />
+  <!-- Chapter Grid -->
+  <div id="grid" class="hidden"></div>
 
-  <ul id="searchResults"></ul>
 </div>
+</body>
+</html>
